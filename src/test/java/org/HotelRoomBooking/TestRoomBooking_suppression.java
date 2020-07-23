@@ -29,37 +29,30 @@ public class TestRoomBooking_suppression {
 	WebElement resa1;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
+		BddOutils.insertData("src/main/resources/JDD/reservation_room1.xml");
 		driver = SocleTechnique.choisirNavigateur(logger, ENavigateur.c);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		wait = new WebDriverWait(driver, 7000);
 		action = new Actions(driver);		
 		
-		//accès à l'application Hotel Room Booking 
-		driver.get("http://127.0.0.1/TutorialHtml5HotelPhp/");
-		
-		//Création d'une réservation sur le premier jour du mois (Room1)
-		driver.findElement(By.xpath(
-				"//div[@class='scheduler_default_cell scheduler_default_cell_business'][contains(@style,'left: 0px; top: 0px')]"))
-				.click();
-		driver.switchTo().frame(0);
-		SocleTechnique.renseignerChamps(driver.findElement(By.id("name")), jdd_nom_reservation);
-		driver.findElement(By.xpath("//input[@type='submit']")).click();
-		driver.switchTo().defaultContent();
-		
-		// vérification de la création
-		resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
 	}
 
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
 		driver.quit();
 	}
 
 	@Test
 	public void test() throws Exception {
-
+		
+		//accès à l'application Hotel Room Booking 
+		driver.get("http://127.0.0.1/TutorialHtml5HotelPhp/");
+		
+		resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
 		action.moveToElement(resa1).build().perform();
 		driver.findElement(By.xpath("//div[contains(@class,'scheduler_default_event_delete')]")).click();
 		SocleTechnique.Go_Chrono();

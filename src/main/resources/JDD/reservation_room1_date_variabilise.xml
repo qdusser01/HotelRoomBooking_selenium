@@ -1,0 +1,5 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<dataset>
+	<reservations name='resa1' start="[start-date]" end="[end-date]" room_id='1' status='New' paid='0'/>
+</dataset>

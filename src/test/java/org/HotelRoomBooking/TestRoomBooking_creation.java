@@ -2,6 +2,7 @@ package org.HotelRoomBooking;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public class TestRoomBooking_creation {
 
-	String jdd_nom_reservation = "resa 1";
+	String jdd_nom_reservation = "resa1";
 
 	static Logger logger = LoggerFactory.getLogger(TestRoomBooking_creation.class);
 	WebDriver driver;
@@ -26,7 +27,8 @@ public class TestRoomBooking_creation {
 	Actions action;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
 		driver = SocleTechnique.choisirNavigateur(logger, ENavigateur.c);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -35,12 +37,13 @@ public class TestRoomBooking_creation {
 	}
 
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
 		driver.quit();
 	}
 
 	@Test
-	public void test() {
+	public void test() throws SQLException, Exception {
 		//accès à l'application Hotel Room Booking / vérification
 		driver.get("http://127.0.0.1/TutorialHtml5HotelPhp/");
 		assertEquals("HTML5 Hotel Room Booking (JavaScript/PHP)", driver.findElement(By.xpath("//h1/a")).getText());
@@ -57,6 +60,9 @@ public class TestRoomBooking_creation {
 		// vérification de la création
 		WebElement resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
 		assertTrue(resa1.getText().contains(jdd_nom_reservation));
+		
+		// vérification BDD
+		BddOutils.compareData("reservations", "src/main/resources/JDD/reservation_room1.xml", "id","start","end");
 		
 	}
 

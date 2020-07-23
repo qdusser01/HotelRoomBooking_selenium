@@ -28,41 +28,29 @@ public class TestRoomBooking_modification {
 	WebElement resa1;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
+		BddOutils.insertData("src/main/resources/JDD/reservation_room1.xml");
 		driver = SocleTechnique.choisirNavigateur(logger, ENavigateur.c);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		wait = new WebDriverWait(driver, 7000);
 		action = new Actions(driver);
 		
-		//accès à l'application Hotel Room Booking / vérification
-		driver.get("http://127.0.0.1/TutorialHtml5HotelPhp/");
-		assertEquals("HTML5 Hotel Room Booking (JavaScript/PHP)", driver.findElement(By.xpath("//h1/a")).getText());
-		
-		//Création d'une réservation sur le premier jour du mois (Room1)
-		driver.findElement(By.xpath(
-				"//div[@class='scheduler_default_cell scheduler_default_cell_business'][contains(@style,'left: 0px; top: 0px')]"))
-				.click();
-		driver.switchTo().frame(0);
-		SocleTechnique.renseignerChamps(driver.findElement(By.id("name")), jdd_nom_reservation);
-		driver.findElement(By.xpath("//input[@type='submit']")).click();
-		driver.switchTo().defaultContent();
-		
-		// vérification de la création
-		resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
-		
 	}
 
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception {
+		BddOutils.deleteAllData("src/main/resources/JDD/nettoyage_table_reservation.xml");
 		driver.quit();
 	}
 
 	@Test
 	public void test() {
-
+		driver.get("http://127.0.0.1/TutorialHtml5HotelPhp/");
 		//Déplacement de la reservation par drag and drop
-		WebElement celluletarget = driver.findElement(By.xpath("//div[contains(@class,'cell_business')][6]"));
+		WebElement celluletarget = driver.findElement(By.xpath("//div[contains(@class,'cell_business')][contains(@style,'left: 40px; top: 0px;')]"));
+		resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
 		action.dragAndDrop(resa1, celluletarget).build().perform();
 		
 		//vérification de l'apparition puis de la disparition du message de confirmation de la modification de la reservation 
@@ -73,7 +61,7 @@ public class TestRoomBooking_modification {
 		assertTrue(messagesuccessful.isDisplayed());
 		assertTrue(wait.until(ExpectedConditions.invisibilityOf(messagesuccessful)));
 		long temps = SocleTechnique.Stop_Chrono();
-		assertTrue(temps > 5000 && temps < 7000);
+		assertTrue(temps > 2000 && temps < 7000);
 
 	}
 
