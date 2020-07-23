@@ -16,11 +16,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TestRoomBooking {
+public class TestRoomBooking_creation {
 
 	String jdd_nom_reservation = "resa 1";
 
-	static Logger logger = LoggerFactory.getLogger(TestRoomBooking.class);
+	static Logger logger = LoggerFactory.getLogger(TestRoomBooking_creation.class);
 	WebDriver driver;
 	WebDriverWait wait;
 	Actions action;
@@ -58,19 +58,6 @@ public class TestRoomBooking {
 		WebElement resa1 = driver.findElement(By.xpath("//div[@class='scheduler_default_event_inner']"));
 		assertTrue(resa1.getText().contains(jdd_nom_reservation));
 		
-		//Déplacement de la reservation par drag and drop
-		WebElement celluletarget = driver.findElement(By.xpath("//div[contains(@class,'cell_business')][6]"));
-		action.dragAndDrop(resa1, celluletarget).build().perform();
-		
-		//vérification de l'apparition puis de la disparition du message de confirmation de la modification de la reservation 
-		WebElement messagesuccessful = driver
-				.findElement(By.xpath("//div[@class='scheduler_default_message' and contains(.,'Update successful')]"));
-		SocleTechnique.Go_Chrono();
-		assertTrue(messagesuccessful.isDisplayed());
-		assertTrue(wait.until(ExpectedConditions.invisibilityOf(messagesuccessful)));
-		long temps = SocleTechnique.Stop_Chrono();
-		assertTrue(temps > 5000 && temps < 7000);
-
 	}
 
 }

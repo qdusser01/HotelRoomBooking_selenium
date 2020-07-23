@@ -1,8 +1,14 @@
 package org.HotelRoomBooking;
 
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -89,6 +95,22 @@ public class SocleTechnique {
 		System.out.println("Temps ecoule = " + temps + " ms");
 		return temps;
 		}
+	public static void takeSnapShot(WebDriver webdriver, String fileWithPath) throws Exception {
+		// Convert web driver object to TakeScreenshot
+		TakesScreenshot scrShot = ((TakesScreenshot) webdriver);
+		// Call getScreenshotAs method to create image file
+		File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+		// Move image file to new destination
+		File DestFile = new File(fileWithPath);
+		// Copy file at destination
+		FileUtils.copyFile(SrcFile, DestFile);
+	}
 
+	public static String capturerHeure() {
+		LocalDateTime date = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH_mm_ss");
+		String text = date.format(formatter);
+		return text;
+	}
 
 }
